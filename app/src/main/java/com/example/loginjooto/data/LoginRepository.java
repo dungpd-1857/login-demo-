@@ -3,13 +3,16 @@ package com.example.loginjooto.data;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
 import com.example.loginjooto.data.model.LoginResponse;
 import com.example.loginjooto.data.model.User;
 import com.example.loginjooto.data.remote.ApiUtils;
 import com.example.loginjooto.data.remote.RetrofitInterface;
 import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,10 +48,10 @@ public class LoginRepository {
                             + response.body().getUser().getEmail() + " "
                             + response.body().getUser().getAuthenticationToken());
                     mLiveData.setValue(response.body());
-                } /*else {
+                } else {
                     Log.d("LoginRepository", "login error");
                     mLiveData.setValue(null);
-                }*/
+                }
             }
 
             @Override
@@ -61,12 +64,12 @@ public class LoginRepository {
     }
 
     public static JsonObject user(@Nullable String username, @Nullable String email,
-            @Nullable String password, @Nullable String language) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(USER_NAME, username);
-        jsonObject.addProperty(USER_EMAIL, email);
-        jsonObject.addProperty(USER_PASSWORD, password);
-        jsonObject.addProperty(USER_LOGIN, username);
-        return jsonObject;
+                                  @Nullable String password, @Nullable String language) {
+        JsonObject object = new JsonObject();
+        object.addProperty(USER_NAME, username);
+        object.addProperty(USER_EMAIL, email);
+        object.addProperty(USER_PASSWORD, password);
+        object.addProperty(USER_LOGIN, username);
+        return object;
     }
 }
