@@ -3,16 +3,10 @@ package com.example.loginjooto.data;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.example.loginjooto.data.model.LoginResponse;
-import com.example.loginjooto.data.model.User;
 import com.example.loginjooto.data.remote.ApiUtils;
 import com.example.loginjooto.data.remote.RetrofitInterface;
 import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,19 +38,17 @@ public class LoginRepository {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body().getSuccess()) {
-                    Log.d("LoginRepository", "login ok"
+                    Log.d("LoginRepository", "login ok "
                             + response.body().getUser().getEmail() + " "
                             + response.body().getUser().getAuthenticationToken());
-                    mLiveData.setValue(response.body());
-                } else {
-                    Log.d("LoginRepository", "login error");
+                    mLiveData.postValue(response.body());
+                }else {
                     mLiveData.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                mLiveData.setValue(null);
                 Log.d("LoginRepository", "error loading from API ");
             }
         });
