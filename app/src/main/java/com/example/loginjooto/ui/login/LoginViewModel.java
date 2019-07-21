@@ -13,7 +13,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> emailError = new MutableLiveData<>();
     private MutableLiveData<Boolean> passError = new MutableLiveData<>();
-    private MutableLiveData<LoginResponse> loginResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> check = new MutableLiveData<>();
     private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> passWord = new MutableLiveData<>();
     private LoginRepository loginRepository;
@@ -21,13 +21,15 @@ public class LoginViewModel extends AndroidViewModel {
     public LoginViewModel(@NonNull Application application) {
         super(application);
         loginRepository = LoginRepository.getInstance();
+        check.setValue(false);
     }
 
     public void login() {
         if (!validate()) {
             return;
         }
-        loginResult = loginRepository.login(getEmail().getValue(), getPassWord().getValue());
+        check.setValue(true);
+        getLoginResult();
     }
 
     public MutableLiveData<LoginResponse> getLoginResult() {
@@ -65,15 +67,11 @@ public class LoginViewModel extends AndroidViewModel {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email.setValue(email);
-    }
-
     public MutableLiveData<String> getPassWord() {
         return passWord;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord.setValue(passWord);
+    public MutableLiveData<Boolean> getCheck() {
+        return check;
     }
 }
