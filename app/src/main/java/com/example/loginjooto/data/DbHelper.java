@@ -5,8 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
 import com.example.loginjooto.data.model.LoginResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,26 +48,24 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<LoginResponse> getAllUser( LoginResponse user) {
+    public List<LoginResponse> getAllUser(LoginResponse user) {
         String[] columns = {ID, COLUMN_EMAIL, COLUMN_TOKEN};
         String sortOrder = COLUMN_EMAIL + " ASC";
         List<LoginResponse> userList = new ArrayList<LoginResponse>();
         SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor cursor = db.query(TABLE, columns, null, null, null, null, sortOrder);
 
         if (cursor.moveToFirst()) {
-            do {
+            while (!cursor.isAfterLast()){
                 user.getUser().setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)));
                 user.getUser().setAuthenticationToken(cursor.getString(cursor.getColumnIndex(COLUMN_TOKEN)));
                 userList.add(user);
-            } while (cursor.moveToNext());
+                cursor.moveToNext();
+            }
         }
         cursor.close();
         db.close();
-        for (LoginResponse list : userList) {
-            Log.d(LOGTAG,  list.getUser().getEmail() + " " + list.getUser()
-                    .getAuthenticationToken());
-        }
         return userList;
     }
 }
