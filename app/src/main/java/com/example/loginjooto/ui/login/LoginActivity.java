@@ -3,22 +3,18 @@ package com.example.loginjooto.ui.login;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+
 import com.example.loginjooto.R;
 import com.example.loginjooto.data.DbHelper;
-import com.example.loginjooto.data.model.LoginResponse;
 import com.example.loginjooto.databinding.ActivityLoginBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding mBinding;
     private DbHelper mDbHelper;
-    private List<LoginResponse> mDbHelperList = new ArrayList<LoginResponse>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +37,20 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginViewModel.getLoginResult().observe(this, loa -> {
-            mDbHelper.add(loa);
-            mDbHelperList = mDbHelper.getAllUser(loa);
-            for (LoginResponse list : mDbHelperList) {
-                Toast.makeText(this, "Login Success" + list.getUser().getId() + " "
-                        + list.getUser().getEmail() + " " + list.getUser()
-                        .getAuthenticationToken(), Toast.LENGTH_SHORT).show();
+            if (loa != null) {
+                mDbHelper.add(loa);
+                showDialog("Login Success " + " email: " + loa.getUser().getEmail() +
+                        "\n token: " + loa.getUser().getAuthenticationToken());
+            }
+            if (loa == null && loginViewModel.getCheck().getValue()) {
+                showDialog("Login error!! pass or email incorrect ");
             }
         });
+    }
+
+    private void showDialog(String content) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(content);
+        dialog.create().show();
     }
 }
